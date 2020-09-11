@@ -69,7 +69,7 @@ class Renko(Instrument):
             uptrend = row_p1['uptrend']
             close_p1 = row_p1['close']
 
-            bricks = int((close - close_p1) / brick_size)
+            bricks = float((close - close_p1) / brick_size)
             data = []
 
             if uptrend and bricks >= 1:
@@ -194,7 +194,7 @@ class PnF(Instrument):
         return state
 
     def roundit(self, x, base=5):
-        return int(base * round(float(x)/base))
+        return float(base * round(float(x)/base))
 
     def get_ohlc_data(self, source='close'):
         source = source.lower()
@@ -221,12 +221,12 @@ class PnF(Instrument):
             close_p1 = pnf_data[-1][4]
 
             if source == 'close':
-                bricks = int((close - close_p1) / box_size)
+                bricks = float((close - close_p1) / box_size)
             elif source == 'hl':
                 if uptrend_p1:
-                    bricks = int((row.high - high_p1) / box_size)
+                    bricks = float((row.high - high_p1) / box_size)
                 else:
-                    bricks = int((row.low - low_p1) / box_size)
+                    bricks = float((row.low - low_p1) / box_size)
             state = self.get_state(uptrend_p1, bricks)
 
             if state is None:
@@ -269,7 +269,7 @@ class PnF(Instrument):
     def get_bar_ohlc_data(self, source='close'):
         df = self.get_ohlc_data(source=source)
 
-        df['trend_change'] = df['uptrend'].ne(df['uptrend'].shift().bfill()).astype(int)
+        df['trend_change'] = df['uptrend'].ne(df['uptrend'].shift().bfill()).astype(float)
         df['trend_change_-1'] = df['trend_change'].shift(-1)
 
         start = df.iloc[0].values
